@@ -17,9 +17,9 @@ the " - COPIA({N})" in file name.
 ==> [Details]: 
 
 This automation will watch a path that expecified in const WATCHED_PATH
-change the const WATCHED_PATH using the func "os.path.join", not "/".
+change the const WATCHED_PATH using the func "os.path.join", not the "/" string.
 
-The logs of renames will be in path especifed in variable _logFilePath of MyHandle class.
+The logs will be in path especifed in variable _logFilePath in MyHandle class.
 
 More in: https://github.com/Venedertti
 '''
@@ -56,12 +56,14 @@ class MyHandler(FileSystemEventHandler):
             os.mkdir(self._logPath)
 
     def on_created(self, event):
-        return self.on_modified(event= event)
+        return self.event_handler(event= event)
 
     def on_modified(self, event):
-
-        if self.validateSrcFile(event.src_path): # -> .opdownload is for opera download before extension rename 
-            # Start 
+        return self.event_handler(event= event)
+        
+    def event_handler(self, event):
+        if self.validateSrcFile(event.src_path): 
+            # Start treatment of new path
             for file in os.listdir(self._watchedPath):
                 src= os.path.join(self._watchedPath, file)
                 if not(file in self._configFolders):
